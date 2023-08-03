@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Login Page</title>
+  <style>
+        button {
+            background-color: blue;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        #loginBtn {
+            background-color: #007bff;
+        }
+    </style>
+</head>
+<body>
+<h1>Login Page</h1>
+<form id="loginForm">
+  <label for="loginId">Login ID:</label>
+  <input type="text" id="loginId" name="loginId" required>
+  <br>
+  <label for="password">Password:</label>
+  <input type="password" id="password" name="password" required>
+  <br>
+  <button id="loginBtn">Submit</button>
+</form>
+<script>
+        document.getElementById("loginForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            const loginId = formData.get("loginId");
+            const password = formData.get("password");
+
+            fetch('https://qa2.sunbasedata.com/sunbase/portal/api/assignment_auth.jsp', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ login_id: loginId, password: password })
+            })
+            .then(response => response.json())
+            .then(data => {
+
+                const token = data.token;
+
+                localStorage.setItem('token', token);
+
+                window.location.href = 'customerList.html';
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+    </script>
+</body>
+</html>
